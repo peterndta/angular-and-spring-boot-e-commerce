@@ -1,0 +1,30 @@
+<table class="table table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Sale Volume</th>
+            <th>Met Quota</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let tempSalesPerson of salesPersonList">
+            <td>{{tempSalesPerson.firstName}}</td>
+            <td>{{tempSalesPerson.lastName}}</td>
+            <td>{{tempSalesPerson.email}}</td>
+            <td>
+                {{ tempSalesPerson.saleVolume | currency:'USD' }}
+            </td>
+            <td>
+                <div *ngIf="tempSalesPerson.saleVolume >= 6000; else elseTemplate">
+                    Yes
+                </div>
+                <ng-template #elseTemplate>
+                    No
+                </ng-template>
+                
+            </td>
+        </tr>
+    </tbody>
+</table>
