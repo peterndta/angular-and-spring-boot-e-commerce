@@ -60,4 +60,26 @@ export class CartService {
     this.totalPrice.next(totalPriceValue)
     this.totalQuantity.next(totalQuantityValue)
   }
+
+  decrementQuantity(theCartItem: CartItem) {
+    theCartItem.quantity--
+
+    if (theCartItem.quantity ===0) {
+      this.remove(theCartItem)
+    } else {
+      this.computeCartTotals()
+    }
+  }
+
+  remove(theCartItem: CartItem) {
+    // get index của item trog array
+    const itemIndex = this.cartItems.findIndex(tempCartItem => tempCartItem.id === theCartItem.id)
+
+    // if tìm dc thì remove item
+    if (itemIndex > -1) {
+      this.cartItems.splice(itemIndex, 1)
+
+      this.computeCartTotals
+    }
+  }
 }
