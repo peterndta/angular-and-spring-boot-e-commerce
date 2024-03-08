@@ -79,7 +79,7 @@ export class CartService {
     if (itemIndex > -1) {
       this.cartItems.splice(itemIndex, 1)
 
-      this.computeCartTotals
+      this.computeCartTotals()
     }
   }
 }
