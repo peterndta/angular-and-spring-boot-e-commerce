@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ShopFormService } from '../../services/shop-form.service';
+import { Country } from '../../common/country';
+import { State } from '../../common/state';
 
 @Component({
   selector: 'app-checkout',
@@ -16,6 +18,11 @@ export class CheckoutComponent implements OnInit{
 
   creditCardYears: number[] = []
   creditCardMonths: number[] = []
+
+  countries: Country[] = []
+  
+  shippingAddressStates: State[] = []
+  billingAddressStates: State[] = []
 
   constructor(private formBuilder: FormBuilder,
               private shopService: ShopFormService) {}
@@ -67,6 +74,12 @@ export class CheckoutComponent implements OnInit{
       }
     )
 
+    // Lấy countries
+    this.shopService.getCountries().subscribe(
+      data => {
+        this.countries = data
+      }
+    )
   }
 
   onSubmit(){
@@ -77,8 +90,15 @@ export class CheckoutComponent implements OnInit{
 
     if(event.target.checked){
       this.checkoutFormGroup.controls['billingAddress'].setValue(this.checkoutFormGroup.controls['shippingAddress'].value)
+      
+      // copy state từ shippingAddress cho billingAddress
+      this.billingAddressStates = this.shippingAddressStates
+
     } else {
       this.checkoutFormGroup.controls['billingAddress'].reset()
+
+      // clear billingAddressStates
+      this.billingAddressStates = []
     }
 
   }
@@ -101,6 +121,26 @@ export class CheckoutComponent implements OnInit{
     this.shopService.getCreditCardMonths(startMonth).subscribe(
       data => {
         this.creditCardMonths = data
+      }
+    )
+  }
+
+  getStates(formGroupName: string) {
+    // check để lấy country đúng với form group đang click
+    const formGroup = this.checkoutFormGroup.get(formGroupName)
+
+    const countryCode = formGroup?.value.country.code
+
+    this.shopService.getStates(countryCode).subscribe(
+      data => {
+        if(formGroupName === 'shippingAddress'){
+          this.shippingAddressStates = data
+        } else {
+          this.billingAddressStates = data
+        }
+
+        // chọn state đầu tiên là default
+        formGroup?.get('state')?.setValue(data[0])
       }
     )
   }
