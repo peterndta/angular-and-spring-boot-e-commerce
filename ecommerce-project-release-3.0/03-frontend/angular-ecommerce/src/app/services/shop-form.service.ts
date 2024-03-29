@@ -3,15 +3,15 @@ import { Observable, map, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Country } from '../common/country';
 import { State } from '../common/state';
-import { response } from 'express';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShopFormService {
 
-  private countriesUrl = 'http://localhost:8080/api/countries'
-  private stateUrl = 'http://localhost:8080/api/states'
+  private countriesUrl = environment.shopApiUrl + '/countries'
+  private stateUrl = environment.shopApiUrl +  '/states'
 
   constructor(private HttpClient: HttpClient) { }
 
